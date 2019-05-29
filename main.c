@@ -139,8 +139,8 @@ int main(int argc, char ** argv){
 	
 	char 
 		//guarda o caminho do arquivo
-		caminho[75] ,
-		saida1[75],saida2[75];
+		* caminho ,
+		saida1[75], saida2[75];
 		
 	int 
 		i;
@@ -154,10 +154,10 @@ int main(int argc, char ** argv){
 	}
 	
 	//recebe o tamanho da matriz NxN
- 	tamanhoMatriz = stoi(argv[0]);
+	sscanf(argv[0],"%d",&tamanhoMatriz);
  	
  	//recebe a quantidade de Threads
- 	nThread = stoi(argv[1]);
+ 	sscanf(argv[1],"%d",&nThread);
  	
  	//recebe o caminho da matriz
  	caminho = argv[2];
@@ -171,9 +171,9 @@ int main(int argc, char ** argv){
  	strcpy(saida2,".diag2");
  	
  	//inicializa as matrizes
- 	matriz = (double *) malloc(tamanhoMatriz * tamanhoMatriz * sizeof(double *));
-	diag1  = (double *) malloc(tamanhoMatriz * tamanhoMatriz * sizeof(double *));
-	diag2  = (double *) malloc(tamanhoMatriz * tamanhoMatriz * sizeof(double *));
+ 	matriz = malloc(tamanhoMatriz * tamanhoMatriz * sizeof(double));
+	diag1  = malloc(tamanhoMatriz * tamanhoMatriz * sizeof(double));
+	diag2  = malloc(tamanhoMatriz * tamanhoMatriz * sizeof(double));
 	
 	//lê o arquivo com a matriz
 	if(ler(matriz,caminho)){
@@ -182,15 +182,15 @@ int main(int argc, char ** argv){
 	}
 	
 	//inicializa a struct para passar para as threads
-	inf = (dadosMatriz) malloc(nThread * sizeof(dadosMatriz));
-	tId = (pthread_t) malloc(nThread * sizeof(pthread_t));
+	inf = malloc(nThread * sizeof(struct dadosMatriz));
+	tId = malloc(nThread * sizeof(pthread_t));
 	
 	//grava o tempo incial
 	tIni = clock();
 	
 	//aloca as threads
 	for(i=0;i<nThread;i++){
-		inf[i]->id = i;
+		inf[i].id = i;
 		pthread_create(tId[i],NULL,operaMatrizes,inf);
 	}
 
@@ -202,7 +202,7 @@ int main(int argc, char ** argv){
 	//grava o tempo final
 	tFim = clock();
  	
- 	printf("O tempo gasto com as threds foi de %lf segundos.\n",double(tFim - tIni)/CLOCKS_PER_SEC);
+ 	printf("O tempo gasto com as threds foi de %lf segundos.\n",(double) (tFim - tIni)/CLOCKS_PER_SEC);
  	
  	//grava as matrizes
  	if(gravar(diag1,saida1)){
