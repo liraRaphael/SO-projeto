@@ -17,7 +17,7 @@ double
 	
 	
 //struct para conter os dados das threads
-struct{
+typedef struct dadosMatriz{
 	//define a identificação
 	int id;
 } dadosMatriz;
@@ -102,10 +102,13 @@ int gravar(double ** aux, char * nome){
 }
 
 //le arquivo da matriz
-int ler (double ** aux, string nome){
+int ler (double ** aux, char * nome){
 	FILE 
 		//crio "arq" - leitura
 		* arq; 
+	
+	int 
+	    i,j;
 	
 	//abre arquivo
 	arq = fopen(nome , "r");		
@@ -117,9 +120,6 @@ int ler (double ** aux, string nome){
 	i = 0;
 	//começa a sequencia de gravação da matriz
 	while(!feof(arq)){
-		
-		//inicializa a linha da matriz
-		aux[i] = (double) malloc(tamanhoMatriz * sizeof(double));
 		
 		for(j=0;j<tamanhoMatriz;j++){
 			fscanf(arq,"%lf",aux[i][j]);
@@ -135,7 +135,7 @@ int ler (double ** aux, string nome){
    
 }
  
-int main(int argc, char argv[][]){
+int main(int argc, char ** argv){
 	
 	char 
 		//guarda o caminho do arquivo
@@ -149,7 +149,7 @@ int main(int argc, char argv[][]){
 	
 	//verefica o numero de argumentos
 	if(argc < 3){
-		cout << "Número de argumentos insuficiente" << endl;
+		printf("Numero de argumentos insuficiente.\n");
 		return 1;
 	}
 	
@@ -176,7 +176,10 @@ int main(int argc, char argv[][]){
 	diag2  = (double *) malloc(tamanhoMatriz * tamanhoMatriz * sizeof(double *));
 	
 	//lê o arquivo com a matriz
-	ler(matriz,caminho);
+	if(ler(matriz,caminho)){
+		printf("Erro ao ler o arquivo.\n");
+		return 1;
+	}
 	
 	//inicializa a struct para passar para as threads
 	inf = (dadosMatriz) malloc(nThread * sizeof(dadosMatriz));
@@ -202,8 +205,16 @@ int main(int argc, char argv[][]){
  	printf("O tempo gasto com as threds foi de %lf segundos.\n",double(tFim - tIni)/CLOCKS_PER_SEC);
  	
  	//grava as matrizes
- 	gravar(diag1,saida1);
- 	gravar(diag1,saida2);
+ 	if(gravar(diag1,saida1)){
+		printf("Erro ao gravar o arquivo.\n");
+		return 1;
+	}
+	
+ 	if(gravar(diag1,saida2)){
+		printf("Erro ao gravar o arquivo.\n");
+		return 1;
+	}
+	
 	return 0;
 	
 }
