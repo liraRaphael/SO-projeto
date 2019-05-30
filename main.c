@@ -22,7 +22,7 @@ typedef struct dadosMatriz{
 	int id;
 } dadosMatriz;
 
-struct dadosMatriz * inf;
+dadosMatriz * inf;
 
 //guardará os ids das threds
 pthread_t * tId;
@@ -59,7 +59,10 @@ void matrizInferior(int cont){
 }
 
 //trabalha as funções das matrizes
-void * operaMatrizes(struct dadosMatriz * dados){
+void * operaMatrizes(void * args){
+	
+	dadosMatriz * dados = args;
+	
 	matrizSuperior(dados->id);
 	matrizInferior(dados->id);		
 }
