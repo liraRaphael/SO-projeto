@@ -122,7 +122,7 @@ int ler (double ** aux, char * nome){
 	while(!feof(arq)){
 		
 		for(j=0;j<tamanhoMatriz;j++){
-			fscanf(arq,"%lf",aux[i][j]);
+			fscanf(arq,"%lf",&aux[i][j]);
 		}
 				
 		i++;
@@ -191,7 +191,7 @@ int main(int argc, char ** argv){
 	//aloca as threads
 	for(i=0;i<nThread;i++){
 		inf[i].id = i;
-		pthread_create(tId[i],NULL,operaMatrizes,inf);
+		pthread_create(&tId[i],NULL,operaMatrizes,&inf[i]);
 	}
 
 	
