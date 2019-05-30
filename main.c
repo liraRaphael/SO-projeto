@@ -27,6 +27,15 @@ dadosMatriz * inf;
 //guardará os ids das threds
 pthread_t * tId;
 
+//metodo que inicia as matrizes
+void iniciaMatrizes(double ** aux){
+	int
+		i;	
+	for(i=0;i<tamanhoMatriz;i++){
+		aux[i] = (double *) malloc(tamanhoMatriz * sizeof(double *));
+	}
+
+}
 
 //trabalha as funções das matrizes
 void * operaMatrizes(void * args){
@@ -103,6 +112,7 @@ int ler (double ** aux, char * nome){
 	int 
 	    i,j;
 	
+	
 	//abre arquivo
 	arq = fopen(nome , "r");		
 	
@@ -133,7 +143,7 @@ int main(int argc, char ** argv){
 	char 
 		//guarda o caminho do arquivo
 		* caminho ,
-		saida1[75], saida2[75];
+		* saida1, * saida2;
 		
 	int 
 		i;
@@ -141,32 +151,40 @@ int main(int argc, char ** argv){
 		tIni,tFim;
 	
 	//verefica o numero de argumentos
-	if(argc < 3){
+	if(argc < 4){
 		printf("Numero de argumentos insuficiente.\n");
 		return 1;
 	}
 	
+
 	//recebe o tamanho da matriz NxN
-	sscanf(argv[0],"%d",&tamanhoMatriz);
+	sscanf(argv[1],"%d",&tamanhoMatriz);
  	
  	//recebe a quantidade de Threads
- 	sscanf(argv[1],"%d",&nThread);
+ 	sscanf(argv[2],"%d",&nThread);
  	
  	//recebe o caminho da matriz
- 	caminho = argv[2];
+ 	caminho = argv[3];
  	
- 	
+	//aloca o char das matrizes
+ 	saida1 = (char *) malloc((strlen(caminho) + 6) * sizeof(char *));
+	saida2 = (char *) malloc((strlen(caminho) + 6) * sizeof(char *));
+
  	//gera os caminhos de saidas
- 	strcpy(saida1,caminho);
- 	strcpy(saida1,".diag1");
- 	
- 	strcpy(saida2,caminho);
- 	strcpy(saida2,".diag2");
+	sscanf(caminho,"%s",saida1);
+	strcpy(saida1,".diag1");
+
+	sscanf(caminho,"%s",saida2);
+	strcpy(saida1,".diag2");
  	
  	//inicializa as matrizes
- 	matriz = malloc(tamanhoMatriz * tamanhoMatriz * sizeof(double));
-	diag1  = malloc(tamanhoMatriz * tamanhoMatriz * sizeof(double));
-	diag2  = malloc(tamanhoMatriz * tamanhoMatriz * sizeof(double));
+ 	matriz = (double **) malloc(tamanhoMatriz * sizeof(double **));
+	diag1  = (double **) malloc(tamanhoMatriz * sizeof(double **));
+	diag2  = (double **) malloc(tamanhoMatriz * sizeof(double **));
+
+	iniciaMatrizes(matriz);
+	iniciaMatrizes(diag1);
+	iniciaMatrizes(diag2);
 	
 	//lê o arquivo com a matriz
 	if(ler(matriz,caminho)){
@@ -175,8 +193,8 @@ int main(int argc, char ** argv){
 	}
 	
 	//inicializa a struct para passar para as threads
-	inf = malloc(nThread * sizeof(struct dadosMatriz));
-	tId = malloc(nThread * sizeof(pthread_t));
+	inf = (dadosMatriz *) malloc(nThread * sizeof(dadosMatriz));
+	tId = (pthread_t *)   malloc(nThread * sizeof(pthread_t));
 	
 	//grava o tempo incial
 	tIni = clock();
@@ -197,13 +215,14 @@ int main(int argc, char ** argv){
  	
  	printf("O tempo gasto com as threds foi de %lf segundos.\n",(double) (tFim - tIni)/CLOCKS_PER_SEC);
  	
+
  	//grava as matrizes
  	if(gravar(diag1,saida1)){
 		printf("Erro ao gravar o arquivo.\n");
 		return 1;
 	}
 	
- 	if(gravar(diag1,saida2)){
+ 	if(gravar(diag2,saida2)){
 		printf("Erro ao gravar o arquivo.\n");
 		return 1;
 	}
