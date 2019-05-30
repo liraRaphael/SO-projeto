@@ -27,44 +27,34 @@ dadosMatriz * inf;
 //guardará os ids das threds
 pthread_t * tId;
 
-//gera a matriz da metade para cima
-void matrizSuperior(int cont){
-	int 
-		//variaveis para o loop
-		i,j;
-		
-	//pega a matriz	
-	for(i=cont;i<tamanhoMatriz;i+=nThread){
-		for(j=i;j<tamanhoMatriz;j++){
-			diag1[i][j] = matriz[i][j];
-			diag2[i][j] = 0;
-		}
-	}
-}
-
-
-//gera a matriz da metade para baixo
-void matrizInferior(int cont){
-	int 
-		//variaveis para o loop
-		i,j;
-		
-	//pega a matriz	
-	for(i=cont;i<tamanhoMatriz;i+=nThread){
-		for(j=0;j<i;j++){
-			diag2[i][j] = matriz[i][j];
-			diag1[i][j] = 0;
-		}
-	}
-}
 
 //trabalha as funções das matrizes
 void * operaMatrizes(void * args){
 	
 	dadosMatriz * dados = args;
 	
-	matrizSuperior(dados->id);
-	matrizInferior(dados->id);		
+	
+	int 
+		//variaveis para o loop
+		i,j;
+		
+	//transforme a matriz diag1
+	for(i=dados->id;i<tamanhoMatriz;i+=nThread){
+		for(j=i;j<tamanhoMatriz;j++){
+			diag1[i][j] = matriz[i][j];
+			diag2[i][j] = 0;
+		}
+	}
+
+	//transforme a matriz diag2
+	for(i=dados->id;i<tamanhoMatriz;i+=nThread){
+		for(j=0;j<i;j++){
+			diag2[i][j] = matriz[i][j];
+			diag1[i][j] = 0;
+		}
+	}	
+		
+		
 }
 
 
