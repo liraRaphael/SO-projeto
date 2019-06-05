@@ -3,6 +3,7 @@
  *	Projeto 1
  *	
  *	Giovanni Bassetto - 216968
+ *	Jonathan Bozza Gon√ßalves 176497
  *	Raphael Lira dos Santos - 223865
  *
 **/
@@ -20,20 +21,20 @@ int
 	nThread;
 
 double
-	//matriz principal que ser· carregada
+	//matriz principal que ser√° carregada
 	**matriz,
 	**diag1,**diag2;
 	
 	
 //struct para conter os dados das threads
 typedef struct dadosMatriz{
-	//define a identificaÁ„o
+	//define a identifica√ß√£o
 	int id;
 } dadosMatriz;
 
 dadosMatriz * inf;
 
-//guardar· os ids das threds
+//guardar√° os ids das threds
 pthread_t * tId;
 
 //metodo que inicia as matrizes
@@ -47,7 +48,7 @@ void iniciaMatrizes(double ** aux){
 
 }
 
-//trabalha as funÁıes das matrizes
+//trabalha as fun√ß√µes das matrizes
 void * operaMatrizes(void * args){
 	
 	dadosMatriz * dados = args;
@@ -81,21 +82,21 @@ void * operaMatrizes(void * args){
 int gravar(double ** aux, char * nome){
 	
 	FILE 
-		//crio "arq" - gravaÁ„o
+		//crio "arq" - grava√ß√£o
 		* arq; 
 		
 	int 
-		//respons·vel por fazer o loop de gravaÁ„o
+		//respons√°vel por fazer o loop de grava√ß√£o
 		i,j;
 
 	//abre arquivo
 	arq = fopen(nome , "w+");		
 	
-	//caso o arquivo n„o for aberto, dÍ erro
+	//caso o arquivo n√£o for aberto, d√™ erro
 	if(arq == NULL)
 		return 1;
 	
-	//comeÁa a sequencia de gravaÁ„o da matriz
+	//come√ßa a sequencia de grava√ß√£o da matriz
 	for(i=0;i<tamanhoMatriz;i++){
 		for(j=0;j<tamanhoMatriz;j++){
 			fprintf(arq,"\t%lf",aux[i][j]);
@@ -126,12 +127,12 @@ int ler (char * nome){
 	//abre arquivo
 	arq = fopen(nome , "r");		
 	
-	//caso o arquivo n„o for aberto, dÍ erro
+	//caso o arquivo n√£o for aberto, d√™ erro
 	if(arq == NULL)
 		return 1;
 	
 	i = 0;
-	//comeÁa a sequencia de gravaÁ„o da matriz
+	//come√ßa a sequencia de grava√ß√£o da matriz
 	while(!feof(arq) && i < tamanhoMatriz){
 		
 		for(j=0;j<tamanhoMatriz;j++){
@@ -196,7 +197,7 @@ int main(int argc, char ** argv){
 	iniciaMatrizes(diag1);
 	iniciaMatrizes(diag2);
 	
-	//lÍ o arquivo com a matriz
+	//l√™ o arquivo com a matriz
 	if(ler(caminho)){
 		printf("Erro ao ler o arquivo.\n");
 		return 1;
